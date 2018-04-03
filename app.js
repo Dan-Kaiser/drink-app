@@ -6,9 +6,8 @@ var randomCocktail = 'https://www.thecocktaildb.com/api/json/v1/1/random.php';
 
 function getDataFromApi(searchTerm, callback) {
   var query = {
-    part: 'snippet',
     key: '1',
-    q: searchTerm
+    s: searchTerm
   }
   console.log($.getJSON(theCockTailDB_ENDPOINT, query, callback));
 }
