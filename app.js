@@ -1,28 +1,29 @@
 //EXAMPLE CODE
 
 var YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/search';
+var theCockTailDB_ENDPOINT = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+var randomCocktail = 'https://www.thecocktaildb.com/api/json/v1/1/random.php';
 
 function getDataFromApi(searchTerm, callback) {
   var query = {
     part: 'snippet',
-    key: 'AIzaSyDJzeYQZK5q4CIdrjORkD7gJmhhrrWnedc',
+    key: '1',
     q: searchTerm
   }
-  console.log($.getJSON(YOUTUBE_ENDPOINT, query, callback));
+  console.log($.getJSON(theCockTailDB_ENDPOINT, query, callback));
 }
 
 function renderResult(result) {
   return `
     <div>
-      <a href="https://www.youtube.com/watch?v=${result.id.videoId}"target="_blank">
-      <img src=${result.snippet.thumbnails.default.url}>
-      </a>
+      <h2> ${result.strDrink}</h2>
+      <img src=${result.strDrinkThumb} width="107" height="98">
     </div>
   `;
 }
 
 function displaySearchData(data) {
-  var results = data.items.map(function(item, index) {
+  var results = data.drinks.map(function(item, index) {
     return renderResult(item)
   });
   $('.js-search-results').html(results);
