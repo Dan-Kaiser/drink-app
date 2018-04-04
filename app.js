@@ -1,8 +1,6 @@
-//EXAMPLE CODE
-
-var YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/search';
-var theCockTailDB_ENDPOINT = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+var theCockTailDB_ENDPOINT = 'https://www.thecocktaildb.com/api/json/v1/1/search.php';
 var randomCocktail = 'https://www.thecocktaildb.com/api/json/v1/1/random.php';
+
 
 function getDataFromApi(searchTerm, callback) {
   var query = {
@@ -14,18 +12,23 @@ function getDataFromApi(searchTerm, callback) {
 
 function renderResult(result) {
   return `
-    <div>
+    <div class="column">
       <h2> ${result.strDrink}</h2>
-      <img src=${result.strDrinkThumb} width="107" height="98">
+      <img src=${result.strDrinkThumb} width="200">
     </div>
   `;
+}
+
+function sortData(data) {
+	return data.sort();
 }
 
 function displaySearchData(data) {
   var results = data.drinks.map(function(item, index) {
     return renderResult(item)
   });
-  $('.js-search-results').html(results);
+  var sortedResults = results.sort();
+  $('.js-search-results').html(sortedResults);
 }
 
 function watchSubmit() {
