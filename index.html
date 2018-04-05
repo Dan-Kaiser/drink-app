@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 
-<!--EXAMPLE CODE -->
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width">
         <title>AJAX TheCockTail API project</title>
+
+        <!-- Responsive viewport tag, tells small screens that it's responsive -->
+        <meta name="viewport" content="width=device-width, initial scale=1">
+
+        <!-- Normalize.css, a cross-browser reset file -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.css" rel="stylesheet">
+
+        <!-- JQuery Script -->
         <script
           src="https://code.jquery.com/jquery-3.2.1.min.js"
           integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-          crossorigin="anonymous"></script>
-        <link href="index.css" rel="stylesheet" type="text/css" />
+          crossorigin="anonymous">
+          </script>
+
+          <!-- Google Font -->
+          <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+
+          <!-- Stylesheets -->
+        <link href="grid.css" rel="stylesheet" type="text/css" />
+        <link href="main.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-
-      <main>
-        <h1>Search Drinks</h1>
-          <form action="#" class="js-search-form">
-            <label for="query"></label>
-            <input type="text" class="js-query">
-            <button type="submit">Search</button>
-          </form>
-          
-          <h2>Results</h2>
-          <div class="js-search-results">
-            
-          </div>
-
+      <header role="banner">
         <div class="row">
-          <div class="column"></div>
-          <div class="column"></div>
-          <div class="column"></div>
-          <div class="column"></div>
-        </div> 
-      </main>
+          <div class="col-12">
+            <h1>Search Drinks</h1>  
+              <form action="#" class="js-search-form">
+                <label for="query"></label>
+                <input type="text" class="js-query">
+               <button type="submit">Search</button>
+              </form>
+            </div>
+          </div>
+      </header>
+        <div class="row js-search-results">
+
+        </div>
       <script src="app.js"></script>
     </body>
 </html>

@@ -1,1 +1,9 @@
 /* insert style here */
+header {
+  background-color: #eebb44;
+  margin-bottom: 40px;
+}
+
+.drink-image {
+  width: 100%;
+}

@@ -1,26 +1,22 @@
 var theCockTailDB_ENDPOINT = 'https://www.thecocktaildb.com/api/json/v1/1/search.php';
-var randomCocktail = 'https://www.thecocktaildb.com/api/json/v1/1/random.php';
 
 
 function getDataFromApi(searchTerm, callback) {
   var query = {
     key: '1',
-    s: searchTerm
+    s: searchTerm,
   }
-  console.log($.getJSON(theCockTailDB_ENDPOINT, query, callback));
+  $.getJSON(theCockTailDB_ENDPOINT, query, callback);
+
 }
 
 function renderResult(result) {
   return `
-    <div class="column">
-      <h2> ${result.strDrink}</h2>
-      <img src=${result.strDrinkThumb} width="200">
+    <div class="col-3">
+      <p> ${result.strDrink}</p>
+      <img class="drink-image" src=${result.strDrinkThumb} width="200">
     </div>
   `;
-}
-
-function sortData(data) {
-	return data.sort();
 }
 
 function displaySearchData(data) {
