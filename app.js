@@ -2,8 +2,10 @@ var theCockTailDB_ENDPOINT = 'https://www.thecocktaildb.com/api/json/v1/1/search
 var byIndex = 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php';
 
 var state = {
-	items: []
+	items: [],
+	ids: []
 }
+var userSearch = "";
 
 var drinkTitles = {
 	a: [11001,11000,11003,11002,11010,11008,11019,11011,11009,11012,11007,11014,11006,11023,11025,11020,11046,11055,11034,11021,11027,11013,11052,11054,11005,11022,11026,11053,11004,11029,11024,11028,11050,12710,12756,12564,12560,12562,12790,12792,12794,12862,12864,12870,13086,13162,13501,13423,13731,13938,13683,13807,14107,14272,14306,14364,17020,16202,16943,14564,14622,14372,14374,14610,14560,14578,14360,14584,15024,15266,15106,15200,17228,15597,16134,17222,15849,16100,15675,16405,16082,16354,17005,16289,17094,16958,16311,17074,16419,16333,15182,17118,15567,15941,17168,17180,15194,17066,17229,17224,17227,17223,17226,17225],
@@ -69,23 +71,26 @@ var drinkTitlesTest = {
 var alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
 
 function getDataByFirstLetter(searchTerm, callback) {
+	//sort array by search term then append array to html
+	state.items = [];
+	state.ids = [];
+	userSearch = searchTerm.toString().toLowerCase();
 
 	for(o = 0; o < searchTerm.length; o++){
-		var currentLetter = searchTerm[o].toString().toLowerCase();
+		var currentLetter = userSearch[o];
 		var random = Math.floor(Math.random() * (drinkTitles[currentLetter].length-1));
-		console.log(random);
 	
 		var query = {
 	    key: 1,
 	    i: drinkTitles[currentLetter][random]
 		}
-		// fix result ordering bug (random ordering right now)
+		state.ids.push(query.i);
+
 		$.getJSON(byIndex, query, callback);
 	}
-	
 }
 
-function getDataFromApi(searchTerm, callback) {
+function getDataBySearch(searchTerm, callback) {
   var query = {
     key: 1,
     s: searchTerm
@@ -109,7 +114,6 @@ function getAllDataByIndex() {
 				});
 				for (e = 0; e < alphabet.length; e++){
 					if (data.drinks[0].strDrink.toLowerCase().charAt(0) === alphabet[e]) {
-						//Make most convienient structure here
 						drinkTitles[alphabet[e]].push(data.drinks[0].idDrink);
 					}
 				}
@@ -122,20 +126,43 @@ function getAllDataByIndex() {
 //could add a number on the render Result return to label each time it renders a result
 function renderResult(result) {
   return `
-      <div class="col-4">
+  		<div class="col-4">
         <p> ${result.strDrink}</p>
         <img class="drink-image" src=${result.strDrinkThumb} width="200">
-      </div>
+        </div>
     `;
 }
+function addItemToState(data) {
+	state.items.push(data.drinks[0]);
+}
 
-
-// could read which number each result is and append them in order of numerical value
 function displaySearchData(data) {
-	var results = data.drinks.map(function(item, index) {
-    	return renderResult(item)
+	//console.log('displaying search data');
+	addItemToState(data);
+	var results = state.items.map(function(item, index) {
+    	return renderResult(item);
   	});
-    $('.js-search-results').html(results);	
+  	var itemOrder = orderData(state);
+  	console.log(itemOrder);
+  	for (i = 0; i < itemOrder.length; i++){
+  	$('.js-search-results').append(results[itemOrder[i]]);
+  	}
+}
+
+function orderData(state){
+	var array = [];
+	if (state.ids.length === userSearch.length && state.ids.length === state.items.length) {
+		for (i = 0; i <= state.ids.length-1; i++){
+			for (o = 0; o <= state.items.length-1; o++){
+				if (state.items[o].idDrink === state.ids[i].toString()){
+					array.push(o);
+				}
+			}
+		}
+		return array;
+	} else {
+		return false;
+	}
 }
 
 function checkIfData (data) {
@@ -155,6 +182,7 @@ function watchSubmit() {
     queryTarget.val("");
     $('.js-search-results').html("");
     //getAllDataByIndex();
+    //getDataBySearch(query, displaySearchData);
     getDataByFirstLetter(query, displaySearchData);
   });
 }
