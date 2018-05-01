@@ -5,5 +5,13 @@ header {
 }
 
 .drink-image {
-  width: 100%;
+	border: lightgray solid 1px;
+  	width: 100%;
+}
+.js-result-item {
+	
+	margin-bottom: 20px;
+}
+.hidden {
+	visibility: hidden;
 }

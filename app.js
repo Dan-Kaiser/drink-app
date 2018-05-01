@@ -3,7 +3,8 @@ var byIndex = 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php';
 
 var state = {
 	items: [],
-	ids: []
+	ids: [],
+	itemOrder: []
 }
 var userSearch = "";
 
@@ -28,10 +29,10 @@ var drinkTitles = {
 	r: [12071,12091,12087,12057,12067,12055,12089,12097,12093,12101,12630,14087,14978,15082,16250,16031,16984,17167,17114,17122,17208,17214,17245],
 	s: [12186,12722,12138,12130,12107,12724,12158,12162,12188,12754,12127,12190,12198,12196,12760,12214,12316,12224,12308,12256,12322,12854,12780,12750,13026,13024,13020,13032,13036,13042,13389,13377,13625,14195,16990,16985,15226,15184,15521,15789,16273,17193,17215,17141,17233],
 	t: [12726,12786,12784,12782,12402,12370,12388,12420,12418,12362,12856,13621,14602,14860,15178,15006,15515,17216,15639,17826,17828,17824,16271,17247],
-	u: [],
+	u: [14456],
 	v: [12450,12460,12446,12442,12434,12436,12444,12452,14167,17218,15403,16967,17217],
 	w: [12516,12518,12528,12474,13056,13058,16158,17194],
-	x: [],
+	x: [12754],
 	y: [12728,17219],
 	z: [14157,14065,14594,16942,15328,14888,15801,15933,15691,17027,16963,15254,17241]
 };
@@ -74,6 +75,7 @@ function getDataByFirstLetter(searchTerm, callback) {
 	//sort array by search term then append array to html
 	state.items = [];
 	state.ids = [];
+	state.itemOrder = [];
 	userSearch = searchTerm.toString().toLowerCase();
 
 	for(o = 0; o < searchTerm.length; o++){
@@ -123,15 +125,35 @@ function getAllDataByIndex() {
 	console.log(drinkTitles);
 }
 
-//could add a number on the render Result return to label each time it renders a result
+//TODO -- Make toggleHidden work on img click
 function renderResult(result) {
-  return `
-  		<div class="col-4">
-        <p> ${result.strDrink}</p>
-        <img class="drink-image" src=${result.strDrinkThumb} width="200">
-        </div>
-    `;
+	var template =  
+  		'<div class="col-4 js-result-item">' +
+        	'<h3>'+ result.strDrink +'</h3>' +
+        	'<img onclick="toggleHidden(event)" class="drink-image" src='+ result.strDrinkThumb +' width="200">' +
+        	'<div class="js-ingredients"' +
+        		'<div id="strIngredient1">'+ result.strMeasure1 + " " + result.strIngredient1 + '</div>' +
+        	'</div>' +
+        '</div>'
+    var element = $(template);
+    for(i = 2; i <= 15; i++) {
+    	var currentIngredient = "strIngredient" + i;
+    	var currentMeasure = "strMeasure" + i;
+    	if (result[currentIngredient] !== null){
+    		element.find('#strIngredient1').append('<div id="'+ currentIngredient +'">' + result[currentMeasure] + " " + result[currentIngredient] + '</div>');
+    	}
+    }
+    element.find('.instructions').addClass('.hidden')
+    return element;
 }
+
+//TODO -- add a '.hidden' class to '.js-ingredients' or remove one if there is one already there.
+function toggleHidden(event){
+	var element = $(event.currentTarget);
+	var find = element.find('.js-instructions').addClass('.hidden');
+	console.log(find);
+}
+
 function addItemToState(data) {
 	state.items.push(data.drinks[0]);
 }
@@ -142,7 +164,7 @@ function displaySearchData(data) {
 	var results = state.items.map(function(item, index) {
     	return renderResult(item);
   	});
-  	var itemOrder = orderData(state);
+  	itemOrder = orderData(state);
   	console.log(itemOrder);
   	for (i = 0; i < itemOrder.length; i++){
   	$('.js-search-results').append(results[itemOrder[i]]);
